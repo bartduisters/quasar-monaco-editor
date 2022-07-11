@@ -1,49 +1,38 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+    <div id="editor"></div>
   </q-page>
 </template>
 
 <script lang="ts">
-import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
-import { defineComponent, ref } from 'vue';
+import * as monaco from 'monaco-editor';
+import { defineComponent, onMounted } from 'vue';
 
 export default defineComponent({
   name: 'IndexPage',
-  components: { ExampleComponent },
-  setup () {
-    const todos = ref<Todo[]>([
-      {
-        id: 1,
-        content: 'ct1'
-      },
-      {
-        id: 2,
-        content: 'ct2'
-      },
-      {
-        id: 3,
-        content: 'ct3'
-      },
-      {
-        id: 4,
-        content: 'ct4'
-      },
-      {
-        id: 5,
-        content: 'ct5'
-      }
-    ]);
-    const meta = ref<Meta>({
-      totalCount: 1200
+  setup() {
+    onMounted(() => {
+      const someCode = `
+const isBartCool = () => true;
+let bartIsCool = isBartCool();
+      `;
+      monaco.editor.create(document.getElementById('editor') as HTMLElement, {
+        value: `// Type your code here\n${someCode}`,
+        language: 'typescript',
+        theme: 'vs-dark',
+        minimap: {
+          enabled: false,
+        },
+      });
     });
-    return { todos, meta };
-  }
+    return {};
+  },
 });
 </script>
+
+<style lang="scss">
+#editor {
+  width: 100%;
+  height: 20rem;
+}
+</style>
